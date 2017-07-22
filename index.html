@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="description" content="Preencha facilmente o pontomais">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="apple-touch-icon" sizes="144x144" href="img/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
+<link rel="manifest" href="img/manifest.json">
+<link rel="mask-icon" href="img/safari-pinned-tab.svg" color="#5bbad5">
+<link rel="shortcut icon" href="img/favicon.ico">
+<meta name="msapplication-config" content="img/browserconfig.xml">
+<meta name="theme-color" content="#ffffff">
+
+<link rel="stylesheet" href="style.css">
+<title>pontomenos</title>
+</head>
+<body>
+	<div id="myModal" class="modal">
+		<div class="modal-content">
+			<span id="close" class="close" onclick="closeModal()">&times;</span>
+			<p id="message">Ponto registrado com sucesso.</p>
+	  	</div>
+	</div>
+    <header>
+			<img src="pontomenos.png" id="logo" alt="pontomenos" width="300" height="58">
+	</header>
+	<section>
+		<form id="myForm" method="post" onsubmit="return submitForm()">
+			<div class="field">
+					<label>Seu email ou CPF:</label>
+					<input id="email" type="text" autofocus>
+			</div>
+			<div class="field">
+					<label>Sua senha:</label>
+					<input id="password" type="password">
+			</div>
+			<div class="field">
+					<button id="submit" type="submit">Registrar Ponto</button>
+			</div>
+		</form>
+    </section>
+
+	<footer class="footer">
+		<p id="lastTimeclock"></p>
+	</footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
