@@ -86,8 +86,10 @@ function closeModal () {
 }
 
 function showLastTimeclock () {
+    /*
     document.querySelector('footer').style.display = 'block';
     Component.LastTimeclock.innerHTML = '&Uacute;ltimo ponto: ' + storage.getItem('lastTimeclock');
     Component.LastTimeclock.style.display = 'block';
+    */
 }
 

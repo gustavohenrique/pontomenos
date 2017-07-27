@@ -7,6 +7,7 @@ import (
         "fmt"
         "log"
 	"os"
+	"crypto/tls"
 
         "github.com/parnurzeal/gorequest"
 	"github.com/gin-contrib/cors"
@@ -93,6 +94,7 @@ func registerTimeclockBy(credential Credential) (error, time.Time) {
 				Set("uid", credential.Email).
 				Set("access-token", credential.Token).
 				Set("client", credential.ClientID).
+				TLSClientConfig(&tls.Config{ InsecureSkipVerify: true}).
 				Send(requestData).
 				End()
 	var err error
