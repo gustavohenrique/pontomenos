@@ -1,13 +1,11 @@
-FROM golang:1.8.3-alpine3.6
+FROM alpine
 
-COPY . /app
+RUN sh -c 'apk add --update tzdata && adduser -D pontomenos'
+USER pontomenos
 
-RUN sh -c 'cd /app \
- && apk add --update git \
- && go get github.com/gin-gonic/gin \
- && go get github.com/gin-contrib/cors \
- && go get github.com/parnurzeal/gorequest \
- && go build main.go'
+ENV TZ America/Sao_Paulo
+
+COPY main /app/
 
 CMD ["/app/main"]
 

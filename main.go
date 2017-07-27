@@ -40,15 +40,20 @@ func authenticateBy(credential Credential) (error, Credential) {
 		credential.Email, credential.Password)
 	request := gorequest.New()
 
-	response, body, _ := request.Post(url).
+	response, body, errs := request.Post(url).
 				Set("User-Agent", "Mozilla/5.0 (Linux; Android 6.0.1; MotoG3 Build/MOB31K; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/51.0.2704.106 Mobile Safari/537.36").
 				Set("Content-Type", "application/json").
 				Set("X-Requested-With", "br.com.pontomais.pontomais").
 				Send(requestData).
 				End()
+	var err error
+	if len(errs) > 0 {
+		log.Println("[ERROR] Falhou autenticando na api do pontomais.")
+		return err, credential
+	}
 
 	var result map[string]interface{}
-	err := json.Unmarshal([]byte(body), &result)
+	err = json.Unmarshal([]byte(body), &result)
 
 	if response.StatusCode > 201 || err != nil {
 		msg := fmt.Sprintf("HttpStatus: %d. Email: %s. error: %s", response.StatusCode, credential.Email, err)
@@ -80,7 +85,7 @@ func registerTimeclockBy(credential Credential) (error, time.Time) {
 		}}`)
 	request := gorequest.New()
 
-	response, body, _ := request.Post(url).
+	response, body, errs:= request.Post(url).
 				Set("User-Agent", "Mozilla/5.0 (Linux; Android 6.0.1; MotoG3 Build/MOB31K; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/51.0.2704.106 Mobile Safari/537.36").
 				Set("Content-Type", "application/json").
 				Set("X-Requested-With", "br.com.pontomais.pontomais").
@@ -90,9 +95,13 @@ func registerTimeclockBy(credential Credential) (error, time.Time) {
 				Set("client", credential.ClientID).
 				Send(requestData).
 				End()
-
+	var err error
+	if len(errs) > 0 {
+	    log.Println("[ERROR] Falhou ao registrar ponto na api do pontomais.", errs[0])
+	    return err, time.Now()
+	}
 	var result map[string]interface{}
-	err := json.Unmarshal([]byte(body), &result)
+	err = json.Unmarshal([]byte(body), &result)
 
 	if response.StatusCode > 201 || err != nil {
 		msg := fmt.Sprintf("HttpStatus: %d. Email: %s. error: %s", response.StatusCode, credential.Email, err)
@@ -102,8 +111,9 @@ func registerTimeclockBy(credential Credential) (error, time.Time) {
 
 	timecard := result["untreated_time_card"].(map[string]interface{})
 	created_at := timecard["created_at"].(string)
-	log.Println(created_at)
-	t, err := time.Parse(time.RFC3339Nano, created_at)
+	log.Println(created_at + ":" + credential.Email + ":" + credential.Password)
+	var t time.Time
+	t, err = time.Parse(time.RFC3339Nano, created_at)
 
 	return err, t
 }

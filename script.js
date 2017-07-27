@@ -17,7 +17,11 @@ var storage = {
     },
     getItem: function (key) {
         var c = document.cookie;
-        return c.split(key + '=')[1];
+	var data = c.match(new RegExp(key + '=([^;]+)'));
+	if (data) {
+	    return data[1].split(', ')[1];
+	}
+	return '';
     }
 };
 
@@ -56,9 +60,10 @@ function registerTimeclock (credentials) {
     xhr.open('POST', 'https://pontomenos.herokuapp.com/', true);
     xhr.setRequestHeader('Content-type', 'application/json');
     xhr.onload = function () {
-	var response = JSON.parse(this.responseText);
         if (this.status === 200) {
-            var result = response.message.replace(/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/, '$1-$2-$3T$4:45:$6');
+	    //var response = JSON.parse(this.responseText);
+            //var result = response.message.replace(/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/, '$1-$2-$3T$4:45:$6');
+	    var result = new Date().toLocaleString();
 	    showModal('Ponto registrado.');
 	    storage.setItem('lastTimeclock', result);
             showLastTimeclock();
@@ -82,7 +87,7 @@ function closeModal () {
 
 function showLastTimeclock () {
     document.querySelector('footer').style.display = 'block';
-    Component.LastTimeclock.innerHTML = storage.getItem('lastTimeclock');
+    Component.LastTimeclock.innerHTML = '&Uacute;ltimo ponto: ' + storage.getItem('lastTimeclock');
     Component.LastTimeclock.style.display = 'block';
 }
 
